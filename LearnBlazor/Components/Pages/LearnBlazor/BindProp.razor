@@ -1,17 +1,54 @@
 ﻿@page "/learnblazor/bindprop"
+@using global::LearnBlazor.Models
 
-<h3>Product - One Way Data Binding</h3>
+<h3>Product - Data Binding</h3>
 
 Name: @Product.Name <br/>
-IsActive: @Product.IsActive <br/>
-@code
-
+IsActive: <input type="checkbox" @bind-value="Product.IsActive" checked=@(Product.IsActive ? "checked" : null)></input> <br/>
+Price: @Product.Price <br/>
+This Product is @(Product.IsActive ? "Active" : "Inactive") <br/>
+Input Price: <input type="number" @bind-value="Product.Price" @bind-value:event="oninput"/><br/>
+Product Properties:
+<select @bind="selectedProp">
+    @foreach (var prop in Product.ProductProperties)
+    {
+        <option value="@prop.Key">@prop.Key</option>
+    }
+</select>
+<br/>
+Selected Property: @selectedProp
+@if (!string.IsNullOrEmpty(selectedProp))
 {
+    <p>Selected value: @Product.ProductProperties.FirstOrDefault(v => v.Key == selectedProp).Value</p>
+}
+@code {
+
+    private string selectedProp = "";
     Models.Product Product = new()
     {
         Id = 1,
-        Name = "Produc 1",
-        IsActive = true
+        Name = "Product 1",
+        IsActive = true,
+        Price = 5,
+        ProductProperties = new List<Product_Prop>
+        {
+            new Product_Prop
+            {
+                Id = 1, Key = "Color", Value = "Red"
+            },
+            new Product_Prop()
+            {
+                Id = 2,
+                Key = "Size",
+                Value = "20oz",
+            },
+            new Product_Prop()
+            {
+                Id = 3,
+                Key = "Flavor",
+                Value = "Rose"
+            }
+        }
     };
-    
+
 }
